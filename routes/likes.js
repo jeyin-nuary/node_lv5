@@ -10,8 +10,10 @@ const router = express.Router();
 router.put('/posts/:postId/like', authMiddleware, async (req, res) => {
     const { postId } = req.params;
     const { userId } = res.locals.user;
-    const likes = await Likes.findOne({
+    const likes = await Likes.findOne({ // 사용자가 좋아요를 눌렀었는지 확인
         where: {
+            //[Op.and]: [{a: 5}, {b: 6}]  (a = 5) AND (b = 6)
+            // [Op.or]: [{a: 5}, {a: 6}]  (a = 5 OR a = 6)
             [Op.and]: [{ UserId: userId }, { PostId: postId }],
         },
     });
@@ -51,7 +53,7 @@ router.get('/likes', authMiddleware, async (req, res) => {
     try {
         const { userId } = res.locals.user;
         const likes = await Likes.findAll({
-            where: { UserId: userId },
+            where: { UserId: userId }, // 유저테이블 포스트테이블 
             include: [
                 {
                     model: Users,
@@ -75,7 +77,7 @@ router.get('/likes', authMiddleware, async (req, res) => {
                 const postId = like.PostId;
                 const postLikes = await Likes.count({ where: { PostId: postId } });
                 return {
-                    postId: like.PostId,
+                    postId,
                     likeUserId: like.UserId,
                     likeNickname: like.User.nickname,
                     title: like.Post.title,
