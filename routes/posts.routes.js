@@ -1,9 +1,21 @@
 const express = require("express");
+const router = express.Router();
+
+const PostsController = require('../controllers/posts.controller');
+const postsController = new PostsController();
+
+router.get('/', postsController.getPosts);
+router.get('/:postId', postsController.getPostById);
+router.post('/', postsController.createPost);
+router.put('/:postId', postsController.updatePost);
+router.delete('/:postId', postsController.deletePost);
+
+
+
 // Op: sequelize 안의 op라는 모듈을 가져다 쓰려고 함
 const { Op } = require("sequelize");
 const { Posts, Users } = require("../models");
 const authMiddleware = require("../middlewares/auth-middleware");
-const router = express.Router();
 
 //게시글 작성 api - 로그인 한 사용자만 작성할 수 있게 authMiddleware 사용
 router.post("/posts", authMiddleware, async (req, res) => {

@@ -3,14 +3,15 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const port = 3000;
 
-const userRouter = require("./routes/users");
-const postRouter = require("./routes/posts");
-const commentRouter = require("./routes/comments");
-const likeRouter = require("./routes/likes");
+// index.router에 옮겨두어서
+const indexRouter = require("./routes/index");
+
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/api", [userRouter, postRouter, commentRouter, likeRouter]);
+// cookieParser 다음에: 쿠키,데이터 파싱 후
+app.use("/api", indexRouter);
+
 
 app.listen(port, () => {
     console.log(port, "포트로 서버가 열렸습니다.");
